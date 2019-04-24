@@ -102,9 +102,7 @@ module.exports.createFolder = (cmd, txt) => {
 //创建CSS;
 module.exports.createCss = (cmd) => {
     let originalBaseCss = join(__dirname, 'templates/H5.css');
-    console.log(originalBaseCss);
     let createBaseCss = join(cmd, 'css', 'H5.css');
-    console.log(createBaseCss);
     fse.readFile(originalBaseCss, 'utf8').then(data => {
         fs.writeFile(createBaseCss, data, () => {
             hint.success(`H5.css 文件创建完成!`);
@@ -117,17 +115,17 @@ module.exports.createHtml = (answers, cmd, option) => {
 
     let templateHtml = join(__dirname, '/templates/','index.html');
     let newHtmlPath = join(answers.path,'index.html');
-    
+
     fse.readFile(templateHtml, 'utf8').then((data) => {
 
-   
+
         let arrImgHtml = [];
-       
+
         let iNum = 0;
         for (let i = 0; i < answers.imgArr.length;i++){
             console.log(answers.imgArr[i].maskBtn)
             if (answers.imgArr[i].maskBtn ){
-                
+
                 if (answers.imgArr[i].maskHeight > answers.cropHeight ){
                     let mulriple = Math.ceil(answers.imgArr[i].maskHeight / answers.cropHeight);
                     for (let j = 0; j < mulriple; j++) {
@@ -142,18 +140,17 @@ module.exports.createHtml = (answers, cmd, option) => {
                 iNum++;
                 arrImgHtml.push(`<div class="rel"><img src="${answers.link}/images/${answers.name}-${iNum}.jpg"/><a href="#" class="special-href"></a></div>`);
             }
-            
+
         }
 
         let cssPath = `<link href="${answers.link}/css/H5.css" rel = "stylesheet" type = "text/css" />`;
 
-        
+
         let tpl = {
-            
             cssPath: cssPath,
             arrImgHtml: arrImgHtml
         }
-   
+
         const result = handlebars.compile(data)(tpl);
         fs.writeFile(newHtmlPath, result, () => {
             hint.success(`html 文件创建完成!`);

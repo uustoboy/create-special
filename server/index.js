@@ -1,15 +1,15 @@
 const Koa = require('koa')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
-const koaBody = require('koa-body')
+const koaBody = require("koa-body");
 
 
 const app = new Koa()
 
 // 引入新建接口路由
-const cityInterface = require('./interface/index.js') 
+const cityInterface = require('./interface/index.js')
 
-app.use(koaBody())
+app.use(koaBody({ multipart: true }));
 // 使用新建接口路由
 app.use(cityInterface.routes()).use(cityInterface.allowedMethods())
 

@@ -101,7 +101,7 @@ export default class Home extends Vue {
   }
 
   mounted(){
-    
+
     // this.layerShow = true
   }
 
@@ -184,16 +184,21 @@ export default class Home extends Vue {
       }
     };
 
-    axios.post("/upload", param, config).then(
+    axios.post("/upload",param).then(
       (response: any): void => {
-        // this.layerShow = true
-        // this.layerTxt = '创建成功'
-        this.$Modal.success({
-            title: '成功',
-            content: '项目创建成功'
-        });
+
       }
     );
+
+
+    // axios.post("/upload", param, config).then(
+    //   (response: any): void => {
+    //     this.$Modal.success({
+    //         title: '成功',
+    //         content: '项目创建成功'
+    //     });
+    //   }
+    // );
 
     //   this.$refs[name].validate((valid) => {
 
