@@ -28,8 +28,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'iview/dist/styles/iview.css',
-    'base_mixins/_base_mixins.scss'
+    'iview/dist/styles/iview.css'
   ],
 
   /*
@@ -61,6 +60,20 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+	    // 此处为新增配置代码
+	    config.module.rules.forEach((rule) => {
+	      if (/scss/.test(rule.test.toString())) {
+	        rule.oneOf.forEach(item => {
+	          item.use.push({
+	            loader: 'sass-loader',
+	            options: {
+	              sourceMap: false,
+	              data: '@import "./node_modules/base_mixins/_base_mixins.scss";'
+	            }
+	          })
+	        })
+	      }
+	    })
     }
   }
 }

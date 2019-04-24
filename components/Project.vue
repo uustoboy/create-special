@@ -75,17 +75,12 @@ export default class Project extends Vue {
 </script>
 <style lang="scss">
 .special-main{
-	position: relative;
-	margin: 0 auto 50px;
+	@include rel();
+	@include mar(0 auto 50);
 }
 .drage-close{
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	width: 22px;
-	height: 22px;
-	z-index: 1;
-	background: url('../assets/close.png') no-repeat 0 0;
-	cursor: pointer;
+	@include abs((t:5,r:5,w:22,h:22,z:1));
+	@include bgi('../assets/close.png',$position:0 0);
+	@include cur;
 }
 </style>

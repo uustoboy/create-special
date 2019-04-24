@@ -143,9 +143,7 @@ export default class HelloWorld extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .drage{
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: url('../assets/ico_hotZone.png') repeat 0 0
+  @include abs((t:0,l:0,w:0,h:0,z:1));
+  @include bgi('../assets/ico_hotZone.png',$repeat:repeat,$position:0 0);
 }
 </style>

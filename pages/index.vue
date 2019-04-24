@@ -1,48 +1,49 @@
 <template>
   <section >
     <div class="project-wrapper">
-    <h2 class="project-title">
-      上传图片生成静态专题
-    </h2>
-    <Form id="formValidate" ref="formValidate" :model="formValidate" :rules="ruleValidate" label-position="right" :label-width="100">
-      <FormItem label="上传图片:">
-        <input
-          id="upload_file"
-          type="file"
-          ref="upload_file"
-          accept="image/*"
-          @change="uploadChange"
-        />
-      </FormItem>
-      <FormItem label="生成项目名:" prop="name">
-        <Input v-model="formValidate.name" placeholder="例如:projectName(最好是英文)"></Input>
-      </FormItem>
-      <FormItem label="图片截图高度:" prop="height">
-        <InputNumber v-model="formValidate.height" :max="1000" :min="1"  placeholder="例如:200"></InputNumber>
-      </FormItem>
-      <FormItem label="生成图片压缩:" prop="quality">
-          <InputNumber
-            v-model="formValidate.quality"
-            :max="100"
-            :min="1"
-            placeholder="例如:80"
-          ></InputNumber>
-      </FormItem>
-      <FormItem label="生成专题路径:" prop="path">
-          <Input v-model="formValidate.path" type="text" placeholder="例如:E:\"></Input>
-      </FormItem>
-      <FormItem label="生成图片链接:" prop="link">
-          <Input v-model="formValidate.link" type="text" placeholder="例如:http://xxx"></Input>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" @click="addDrag">添加点击区域</Button>
-        (点击区域不可重叠)
-      </FormItem>
-      <FormItem>
-          <Button type="primary" @click="handleSubmit('formValidate')">一键生成专题</Button>
-          <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
-      </FormItem>
-   </Form>
+      <div class="aa"></div>
+      <h2 class="project-title">
+        上传图片生成静态专题
+      </h2>
+      <Form id="formValidate" ref="formValidate" :model="formValidate" :rules="ruleValidate" label-position="right" :label-width="100">
+        <FormItem label="上传图片:">
+          <input
+            id="upload_file"
+            type="file"
+            ref="upload_file"
+            accept="image/*"
+            @change="uploadChange"
+          />
+        </FormItem>
+        <FormItem label="生成项目名:" prop="name">
+          <Input v-model="formValidate.name" placeholder="例如:projectName(最好是英文)"></Input>
+        </FormItem>
+        <FormItem label="图片截图高度:" prop="height">
+          <InputNumber v-model="formValidate.height" :max="1000" :min="1"  placeholder="例如:200"></InputNumber>
+        </FormItem>
+        <FormItem label="生成图片压缩:" prop="quality">
+            <InputNumber
+              v-model="formValidate.quality"
+              :max="100"
+              :min="1"
+              placeholder="例如:80"
+            ></InputNumber>
+        </FormItem>
+        <FormItem label="生成专题路径:" prop="path">
+            <Input v-model="formValidate.path" type="text" placeholder="例如:E:\"></Input>
+        </FormItem>
+        <FormItem label="生成图片链接:" prop="link">
+            <Input v-model="formValidate.link" type="text" placeholder="例如:http://xxx"></Input>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" @click="addDrag">添加点击区域</Button>
+          (点击区域不可重叠)
+        </FormItem>
+        <FormItem>
+            <Button type="primary" @click="handleSubmit('formValidate')">一键生成专题</Button>
+            <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+        </FormItem>
+     </Form>
   </div>
   <theme-project :base64="uploadImg"></theme-project>
   <BackTop></BackTop>
@@ -62,11 +63,14 @@ import axios from 'axios'
   }
 })
 export default class Home extends Vue {
-  @State private dragArray !: Array;
-  @State private uploadingImgHeight !: Number;
-  @Mutation private addDrag!: () => void;
+  @State private dragArray !: Array
+  @State private uploadingImgHeight !: Number
+  @Mutation private addDrag!: () => void
 
-  uploadImg: String = "";
+  layerShow = false
+  layerTxt = ''
+
+  uploadImg: String = ""
   formValidate = {
       name: '',
       height: 200,
@@ -94,6 +98,11 @@ export default class Home extends Vue {
           { required: true, message: '请输入专题图片路径', trigger: 'blur' },
           { type: 'string', message: '必须是字符串类型', trigger: 'blur' }
       ]
+  }
+
+  mounted(){
+    
+    // this.layerShow = true
   }
 
   public handleSubmit (name) {
@@ -151,25 +160,23 @@ export default class Home extends Vue {
     let filesDom = document.getElementById("upload_file");
     let file = filesDom.files[0];
     let fileName = file.name;
-    let ext = fileName.slice(fileName.lastIndexOf(".")+1).toLowerCase();
+    let type = fileName.slice(fileName.lastIndexOf(".")+1).toLowerCase();
     let param = new FormData();
 
     console.log(endDragArray2);
     param.append("file", file, file.name);
-    param.append("h", this.formValidate.height);
+    param.append("height", this.formValidate.height);
     param.append("name", this.formValidate.name);
-    param.append("specialPath", this.formValidate.path);
-    param.append("type", ext);
+    param.append("path", this.formValidate.path);
+    param.append("type", type);
     param.append("quality",this.formValidate.quality)
 
     param.append("screenshot", JSON.stringify(endDragArray2));
     if (this.formValidate.link) {
-      param.append("specialLink", this.formValidate.link);
+      param.append("link", this.formValidate.link);
     } else {
-      param.append("specialLink", "http://static8.baihe.com/images/");
+      param.append("link", "http://static8.baihe.com/images/");
     }
-
-    console.log()
 
     const config = {
       headers: {
@@ -177,10 +184,14 @@ export default class Home extends Vue {
       }
     };
 
-    axios.get("/city/list").then(
+    axios.post("/upload", param, config).then(
       (response: any): void => {
-        console.log(response)
-        alert("创建成功");
+        // this.layerShow = true
+        // this.layerTxt = '创建成功'
+        this.$Modal.success({
+            title: '成功',
+            content: '项目创建成功'
+        });
       }
     );
 
@@ -218,19 +229,17 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 
 body{
-  background:#fafafa;
+  @include bgc(#fafafa);
 }
 
 .project-wrapper{
-  width: 500px;
-  margin: 0 auto;
+  @include w(500);
+  @include mar(0 auto);
 }
 
 .project-title{
-  text-align: center;
-  font-size: 30px;
-  line-height: 40px;
-  color: #2d8cf0;
-  padding: 20px 0;
+  @include tac;
+  @include flc(30,40,#2d8cf0);
+  @include pad(20 0);
 }
 </style>

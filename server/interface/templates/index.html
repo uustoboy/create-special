@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="yes" name="apple-touch-fullscreen">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta content="telephone=no,email=no" name="format-detection">
+  <meta content="fullscreen=yes,preventMove=no" name="ML-Config">
+  <meta name="viewport" content="width=640px,target-densitydpi=device-dpi,user-scalable=no" />
+  <title></title>
+  <!-- <link href="http://static8.baihe.com/Double201812/css/H5.css" rel="stylesheet" type="text/css" /> -->
+  {{{cssPath}}}
+  <script type="text/javascript">
+    var is_low = navigator.userAgent.toLowerCase().indexOf('android') != -1;
+    var _ww = (window.screen.availWidth * (window.devicePixelRatio || 1.5) / 1);
+    if (is_low && _ww < 720) {
+      document.writeln('<meta name="viewport" content="width=640px,target-densitydpi=device-dpi,user-scalable=yes,initial-scale=0.5" />');
+    } else {
+      document.writeln('<meta name="viewport" content="width=640px,target-densitydpi=device-dpi,user-scalable=no" />');
+    }
+  </script>
+  <script type="text/javascript" src="http://static5.baihe.com/js/jquery.js"></script>
+  <script type="text/javascript" src="http://static4.baihe.com/common/tongji-1.0.1.min.js" charset='utf-8'></script>
+</head>
+<body>
+  <div class="cont">
+    {{#each arrImgHtml}}
+      {{{this}}}
+    {{/each}}
+  </div>
+</body>
+</html>
