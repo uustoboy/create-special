@@ -47,6 +47,7 @@
   </div>
   <theme-project :base64="uploadImg"></theme-project>
   <BackTop></BackTop>
+  <Load></Load>
   </section>
 </template>
 
@@ -55,11 +56,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
 import ThemeProject from '~/components/Project.vue'
+import Load from '~/components/Load.vue'
 import axios from 'axios'
 
 @Component({
   components: {
-    ThemeProject
+    ThemeProject,
+    Load
   }
 })
 export default class Home extends Vue {
@@ -125,7 +128,7 @@ export default class Home extends Vue {
           endDragArray.push({
             dragTop: 0,
             dragHeight: item.dragTop,
-            maskBtn: true
+            dragBtn: true
           });
         } else {
           endDragArray.push(item);
@@ -137,7 +140,7 @@ export default class Home extends Vue {
           endDragArray.push({
             dragTop: item.dragTop + item.dragHeight,
             dragHeight: this.uploadingImgHeight - (item.dragTop + item.dragHeight),
-            maskBtn: true
+            dragBtn: true
           });
         }
         endDragArray.push(item);
@@ -146,7 +149,7 @@ export default class Home extends Vue {
           dragTop: item.dragTop + item.dragHeight,
           dragHeight:
             originDragArray[index + 1].dragTop - (item.dragTop + item.dragHeight),
-          maskBtn: true
+          dragBtn: true
         });
         endDragArray.push(item);
       }
@@ -156,14 +159,12 @@ export default class Home extends Vue {
       return a.dragTop > b.dragTop ? 1 : -1; // 从小到大排序
     });
 
-
     let filesDom = document.getElementById("upload_file");
     let file = filesDom.files[0];
     let fileName = file.name;
     let type = fileName.slice(fileName.lastIndexOf(".")+1).toLowerCase();
     let param = new FormData();
 
-    console.log(endDragArray2);
     param.append("file", file, file.name);
     param.append("height", this.formValidate.height);
     param.append("name", this.formValidate.name);
@@ -177,12 +178,6 @@ export default class Home extends Vue {
     } else {
       param.append("link", "http://static8.baihe.com/images/");
     }
-
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    };
 
     axios.post("/upload",param).then(
       (response: any): void => {

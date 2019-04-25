@@ -117,44 +117,34 @@ module.exports.createHtml = (answers, cmd, option) => {
     let newHtmlPath = join(answers.path,'index.html');
 
     fse.readFile(templateHtml, 'utf8').then((data) => {
-
-
         let arrImgHtml = [];
-
         let iNum = 0;
         for (let i = 0; i < answers.imgArr.length;i++){
-            console.log(answers.imgArr[i].maskBtn)
-            if (answers.imgArr[i].maskBtn ){
-
-                if (answers.imgArr[i].maskHeight > answers.cropHeight ){
-                    let mulriple = Math.ceil(answers.imgArr[i].maskHeight / answers.cropHeight);
+            if (answers.imgArr[i].dragBtn ){
+                if (answers.imgArr[i].dragHeight > answers.cropHeight ){
+                    let mulriple = Math.ceil(answers.imgArr[i].dragHeight / answers.cropHeight);
                     for (let j = 0; j < mulriple; j++) {
                         iNum++;
-                        arrImgHtml.push(`<img src="${answers.link}/images/${answers.name}-${iNum}.jpg"/>`);
+                        arrImgHtml.push(`<img src="${answers.link}/images/${answers.name}-${iNum}.${answers.imgType}"/>`);
                     }
                 }else{
                     iNum++;
-                    arrImgHtml.push(`<img src="${answers.link}/images/${answers.name}-${iNum}.jpg"/>`);
+                    arrImgHtml.push(`<img src="${answers.link}/images/${answers.name}-${iNum}.${answers.imgType}"/>`);
                 }
             }else{
                 iNum++;
-                arrImgHtml.push(`<div class="rel"><img src="${answers.link}/images/${answers.name}-${iNum}.jpg"/><a href="#" class="special-href"></a></div>`);
+                arrImgHtml.push(`<div class="rel"><img src="${answers.link}/images/${answers.name}-${iNum}.${answers.imgType}"/><a href="#" class="special-href"></a></div>`);
             }
 
         }
-
         let cssPath = `<link href="${answers.link}/css/H5.css" rel = "stylesheet" type = "text/css" />`;
-
-
         let tpl = {
             cssPath: cssPath,
             arrImgHtml: arrImgHtml
         }
-
         const result = handlebars.compile(data)(tpl);
         fs.writeFile(newHtmlPath, result, () => {
             hint.success(`html 文件创建完成!`);
         });
-
     })
 };

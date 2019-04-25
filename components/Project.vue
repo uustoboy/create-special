@@ -54,10 +54,12 @@ export default class Project extends Vue {
 	onImgWidthHeightChanged(val: string, oldVal: string) {
 		const image = new Image();
 	    image.src = this.base64;
-	    image.onload = () => {
+	    image.onload = () => {	
+	    	const w = image.width + 2;
+	    	const h = image.height + 2;
 	        this.widthHeight = {
-	        	width: `${image.width}px`,
-	        	height: `${image.height}px`
+	        	width: `${w}px`,
+	        	height: `${h}px`
 			}
 			this.setUploadingImgHeight(image.height);
 	    }
@@ -77,6 +79,7 @@ export default class Project extends Vue {
 .special-main{
 	@include rel();
 	@include mar(0 auto 50);
+	@include bd(1 solid #69fffe);
 }
 .drage-close{
 	@include abs((t:5,r:5,w:22,h:22,z:1));
