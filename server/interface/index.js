@@ -5,7 +5,6 @@ const fs = require('fs');
 const ejs = require('ejs');
 const fse = require('fs-extra');
 const { hint, isFile, getPath, getTime, createFolder, createCss, getFileType, createHtml } = require('./util');
-
 const router = new Router();
 const Jimp = require('jimp');
 
@@ -34,7 +33,12 @@ router.post('/upload', async (ctx,next) => {
     //创建文件夹;
     if (isFile(createProjectPath) ){
         hint.warning('已创建项目目录！');
-        return ;
+        return ctx.body = {
+                    code: 1,
+                    data:{
+                        text: '已创建项目目录！'
+                    }
+                };
     }
 
     await createFolder(join(createProjectPath, "css"), "css");
@@ -62,6 +66,15 @@ router.post('/upload', async (ctx,next) => {
         filePath,
         createProjectPath
     });
+
+    ctx.body = {
+        code: 1,
+        data:{
+            text: `创建项目${projectName}完成！`
+        }
+    };
+
+
 })
 
 let forCrop = async ( imgObj ) => {
@@ -120,7 +133,7 @@ let forCrop = async ( imgObj ) => {
 }
 
 let cropImage = async ( cropImage ) => {
-    Jimp.read(cropImage.filePath)
+    await Jimp.read(cropImage.filePath)
           .then(lenna => {
             let path = cropImage.createImgPath;
             let jimpWidth = lenna.bitmap.width;

@@ -9,7 +9,7 @@
     	:dragHeight="item.dragHeight"
     	:dragCursor="item.dragCursor"
     	:dragZIndex="item.dragZIndex"
-			@drageEvent="getDrag"
+		@drageEvent="getDrag"
     >
    		<div class="drage-close"
              @click="deleteDrag(item.dragID)"></div>
@@ -22,7 +22,6 @@ import vueDrag from "./Vue-drag.vue";
 import { mapMutations } from 'vuex'
 import { State, Mutation } from "vuex-class";
 
-
 @Component({
   components: {
     vueDrag
@@ -32,23 +31,12 @@ import { State, Mutation } from "vuex-class";
 export default class Project extends Vue {
 
 	@Prop(String) readonly base64!: string;
+	@State private dragArray !: Array;
 	@Mutation private deleteDrag!: (id: string) => void;
 	@Mutation private moveDrag!: (drag: array) => void;
 	@Mutation private setUploadingImgHeight!: (h: number) => void;
 
-
-
-	widthHeight = {}
-
-	get dragArray () {
-      return this.$store.state.dragArray
-    }
-
-	width = 100;
-	height = 200;
-	top = 0;
-	left = 0;
-
+	widthHeight: Object = {}
 
 	@Watch('base64')
 	onImgWidthHeightChanged(val: string, oldVal: string) {
@@ -65,11 +53,7 @@ export default class Project extends Vue {
 	    }
 	}
 
-	mounted(){
-  }
-
-
-	getDrag (drag) {
+	private getDrag (drag) {
 		this.moveDrag(drag);
 	}
 
@@ -80,6 +64,7 @@ export default class Project extends Vue {
 	@include rel();
 	@include mar(0 auto 50);
 	@include bd(1 solid #69fffe);
+	@include z(1);
 }
 .drage-close{
 	@include abs((t:5,r:5,w:22,h:22,z:1));

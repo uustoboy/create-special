@@ -33,10 +33,10 @@ module.exports.hint = {
 module.exports.isFile = ( _path ) => fse.pathExistsSync( _path )?true:false;
 
 //返回绝对路径；
-module.exports.getPath = ( _path ) => resolve( process.cwd(),_path?_path:'/' );
+module.exports.getPath = async ( _path ) => resolve( process.cwd(),_path?_path:'/' );
 
 //返回时间戳;
-module.exports.getTime = () =>{
+module.exports.getTime = async () =>{
     let fillZero = ( num )=>{ return num > 9 ? num :'0'+num; }
     let date = new Date();
     let year = date.getFullYear();
@@ -51,7 +51,7 @@ module.exports.getTime = () =>{
 
 
 //文件类型;
-module.exports.getFileType = ( file,type )=>{
+module.exports.getFileType = async ( file,type )=>{
     let fileType,
     regType = /\.[^\.]+$/;
     if( regType.exec(file)){
@@ -88,22 +88,21 @@ module.exports.getFileType = ( file,type )=>{
     };
 }
 
-
-
 //创建文件夹；
-module.exports.createFolder = (cmd, txt) => {
-    fse.ensureDir(cmd).then(() => {
+module.exports.createFolder = async (cmd, txt,call) => {
+    await fse.ensureDir(cmd).then(() => {
         hint.success(`${txt} 文件夹创建!`);
+        call && call();
     }).catch((err) => {
         hint.error(err);
     });
 }
 
 //创建CSS;
-module.exports.createCss = (cmd) => {
+module.exports.createCss = async (cmd) => {
     let originalBaseCss = join(__dirname, 'templates/H5.css');
     let createBaseCss = join(cmd, 'css', 'H5.css');
-    fse.readFile(originalBaseCss, 'utf8').then(data => {
+    await fse.readFile(originalBaseCss, 'utf8').then(data => {
         fs.writeFile(createBaseCss, data, () => {
             hint.success(`H5.css 文件创建完成!`);
         });
@@ -111,12 +110,12 @@ module.exports.createCss = (cmd) => {
 }
 
 //创建HTML;
-module.exports.createHtml = (answers, cmd, option) => {
+module.exports.createHtml = async (answers, cmd, option) => {
 
     let templateHtml = join(__dirname, '/templates/','index.html');
     let newHtmlPath = join(answers.path,'index.html');
 
-    fse.readFile(templateHtml, 'utf8').then((data) => {
+    await fse.readFile(templateHtml, 'utf8').then((data) => {
         let arrImgHtml = [];
         let iNum = 0;
         for (let i = 0; i < answers.imgArr.length;i++){

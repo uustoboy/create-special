@@ -28,13 +28,14 @@ export default class HelloWorld extends Vue {
   @Prop() private dragZIndex!: String;
   @Prop() private dragBtn!: Object;
 
-  top = 0;
-  left = 0;
-  width = '100%';
-  height = 200;
-  zIndex = 0;
-  parentElement = '';
-  cursor = 'move';
+  top: number = 0;
+  left: number = 0;
+  width: number = '100%';
+  height: number = 200;
+  zIndex: number = 0;
+  parentElement: Object = '';
+  cursor: string = 'move';
+  
   mounted(){
     this.parentElement = this.$el;
     this.ID = this.dragID;
@@ -43,9 +44,9 @@ export default class HelloWorld extends Vue {
     this.cursor = this.dragCursor;
     this.zIndex = this.dragZIndex;
   }
-  dir = 'move';
-  clickBtn = true;
-  dragDown (e: any) {
+  dir: string = 'move';
+  clickBtn: boolean = true;
+  private dragDown (e: any) {
     this.clickBtn = false;
     let oDrag = this.parentElement;
     let disY = e.clientY - oDrag.offsetTop;
@@ -102,7 +103,7 @@ export default class HelloWorld extends Vue {
     };
   }
 
-  dragMove (e: any){
+  private dragMove (e: any){
     if (!this.clickBtn) {
       return (this.clickBtn = false);
     }
