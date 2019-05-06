@@ -108,48 +108,55 @@ export default class Home extends Vue {
       if (valid) {
 
         let dragArray: Array = [...this.dragArray]
-        let originDragArray = dragArray.sort((a, b) => {
-          return a.dragTop > b.dragTop ? 1 : -1 // 从小到大排序
-        })
+        let endDragArray2 = []
+        if(dragArray.length == 0){
+          endDragArray2.push({
+            dragTop: 0,
+            dragHeight: this.uploadingImgHeight
+          })
+        }else{
+          let originDragArray = dragArray.sort((a, b) => {
+            return a.dragTop > b.dragTop ? 1 : -1 // 从小到大排序
+          })
 
-        const endDragArray: Array<any> = []
-        originDragArray.forEach((item, index) => {
-          if (index === 0) {
-            if (item.dragTop > 0) {
-              endDragArray.push({
-                dragTop: 0,
-                dragHeight: item.dragTop,
-                dragBtn: true
-              })
-            } else {
-              endDragArray.push(item)
+          const endDragArray: Array<any> = []
+          originDragArray.forEach((item, index) => {
+            if (index === 0) {
+              if (item.dragTop > 0) {
+                endDragArray.push({
+                  dragTop: 0,
+                  dragHeight: item.dragTop,
+                  dragBtn: true
+                })
+              } else {
+                endDragArray.push(item)
+              }
             }
-          }
-          let len = originDragArray.length
-          if (index == len - 1) {
-            if (this.uploadingImgHeight - (item.dragTop + item.dragHeight) > 0) {
+            let len = originDragArray.length
+            if (index == len - 1) {
+              if (this.uploadingImgHeight - (item.dragTop + item.dragHeight) > 0) {
+                endDragArray.push({
+                  dragTop: item.dragTop + item.dragHeight,
+                  dragHeight: this.uploadingImgHeight - (item.dragTop + item.dragHeight),
+                  dragBtn: true
+                })
+              }
+              endDragArray.push(item)
+            } else {
               endDragArray.push({
                 dragTop: item.dragTop + item.dragHeight,
-                dragHeight: this.uploadingImgHeight - (item.dragTop + item.dragHeight),
+                dragHeight:
+                  originDragArray[index + 1].dragTop - (item.dragTop + item.dragHeight),
                 dragBtn: true
               })
+              endDragArray.push(item)
             }
-            endDragArray.push(item)
-          } else {
-            endDragArray.push({
-              dragTop: item.dragTop + item.dragHeight,
-              dragHeight:
-                originDragArray[index + 1].dragTop - (item.dragTop + item.dragHeight),
-              dragBtn: true
-            })
-            endDragArray.push(item)
-          }
-        })
+          })
 
-        let endDragArray2 = endDragArray.sort((a, b) => {
-          return a.dragTop > b.dragTop ? 1 : -1 // 从小到大排序
-        })
-
+          endDragArray2 = endDragArray.sort((a, b) => {
+            return a.dragTop > b.dragTop ? 1 : -1 // 从小到大排序
+          })
+        }
         let filesDom = document.getElementById("upload_file")
         let file = filesDom.files[0]
         
